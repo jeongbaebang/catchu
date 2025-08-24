@@ -1,1 +1,1 @@
-export { CreatePostScreen as default } from '@/screens/post';
+export { CreatePostScreen as default } from '@/screens/post'

@@ -1,14 +1,21 @@
-import React from 'react';
+import React from 'react'
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { PostListHeader, ThemedView } from '@/components'
 
 const PostListScreen = () => {
   return (
-    <ThemedView>
-      <ThemedText>PostListScreen2</ThemedText>
+    <ThemedView
+      safeArea
+      style={{
+        paddingHorizontal: 16,
+        borderBottomWidth: 1,
+        borderColor: '#F3F4F6',
+      }}
+    >
+      {/* 포스트 리스트 헤더 */}
+      <PostListHeader />
     </ThemedView>
-  );
-};
+  )
+}
 
-export { PostListScreen };
+export { PostListScreen }

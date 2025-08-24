@@ -3,8 +3,9 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-const tintColorLight = '#FF4757'; // 캐치유 메인 레드
-const tintColorDark = '#FF6B7A'; // 밝은 핑크레드
+const tintColorLight = '#FF4757' // 캐치유 메인 레드
+const tintColorDark = '#FF6B7A' // 밝은 핑크레드
+export const mainColor = '#7F62E6' // 메인컬러
 
 export const Colors = {
   light: {
@@ -23,4 +24,4 @@ export const Colors = {
     tabIconDefault: '#687076', // 어두운 회색 (비활성 탭)
     tabIconSelected: tintColorDark, // 밝은 핑크레드 (활성 탭)
   },
-};
+}
