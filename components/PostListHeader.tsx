@@ -5,6 +5,8 @@ import IconButton from './ui/IconButton'
 import { ThemedText } from './ThemedText'
 import { mainColor } from '@/constants/colors'
 
+export const POST_LIST_HEADER_HEIGHT = 64
+
 export const PostListHeader = () => {
   return (
     <View style={styles.container}>
@@ -39,9 +41,11 @@ export const PostListHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 64,
+    minHeight: POST_LIST_HEADER_HEIGHT,
     flexDirection: 'row',
+    paddingHorizontal: 16,
     justifyContent: 'space-between',
+    // backgroundColor: 'pink',
   },
   leftSection: {
     flexDirection: 'row',

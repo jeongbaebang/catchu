@@ -1,3 +1,5 @@
-export { PostListHeader } from './PostListHeader'
+export { PostListHeader, POST_LIST_HEADER_HEIGHT } from './PostListHeader'
+export { PostItem } from './PostItem'
 export { ThemedText } from './ThemedText'
 export { ThemedView } from './ThemedView'
+export { HapticTab } from './ui/HapticTab'

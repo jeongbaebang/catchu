@@ -22,6 +22,10 @@ const MAPPING = {
   'bag.circle.fill': 'shopping-bag',
   magnifyingglass: 'search',
   'bell.fill': 'notifications',
+  heart: 'favorite-border',
+  'heart.fill': 'favorite',
+  'message.fill': 'messenger',
+  'square.and.arrow.up.fill': 'ios-share',
 } as IconMapping
 
 export function IconSymbol({
