@@ -30,6 +30,8 @@ const MAPPING = {
   ellipsis: 'more-horiz',
   'star.fill': 'star',
   star: 'star-border',
+  'plus.circle': 'add-circle-outline',
+  pencil: 'edit',
 } as IconMapping
 
 export function IconSymbol({
