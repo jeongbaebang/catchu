@@ -6,6 +6,10 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated'
+import { StyleSheet, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { BlurView } from 'expo-blur'
+import { useRouter } from 'expo-router'
 
 import {
   POST_LIST_HEADER_HEIGHT,
@@ -13,41 +17,12 @@ import {
   PostListHeader,
   ThemedView,
 } from '@/components'
-import { StyleSheet, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
-import { BlurView } from 'expo-blur'
+
+import { avatarImages, productImages } from '@/constants/mock'
 
 const PostListScreen = () => {
   const insets = useSafeAreaInsets()
-
-  const avatarImages = [
-    require('@/assets/images/uifaces-popular-avatar (0).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (1).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (2).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (3).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (4).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (5).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (6).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (7).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (8).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (9).jpg'),
-    require('@/assets/images/uifaces-popular-avatar (10).jpg'),
-  ]
-
-  const productImages = [
-    require('@/assets/images/product (0).png'),
-    require('@/assets/images/product (1).png'),
-    require('@/assets/images/product (2).png'),
-    require('@/assets/images/product (3).png'),
-    require('@/assets/images/product (4).png'),
-    require('@/assets/images/product (5).png'),
-    require('@/assets/images/product (6).png'),
-    require('@/assets/images/product (7).png'),
-    require('@/assets/images/product (8).png'),
-    require('@/assets/images/product (9).png'),
-    require('@/assets/images/product (10).png'),
-  ]
+  const router = useRouter()
 
   // 0-10까지의 mock 데이터 생성
   const mockDataList = Array.from({ length: 11 }, (_, index) => ({
@@ -91,6 +66,7 @@ const PostListScreen = () => {
 
   const handleViewStore = (id: number) => {
     console.log(`스토어 보기 클릭 - 아이템 ${id}`)
+    router.push(`/post/${id}`)
   }
 
   //  FIXME: any 타입 수정하기
@@ -138,50 +114,43 @@ const PostListScreen = () => {
   })
 
   return (
-    <>
-      <StatusBar
-        style='auto'
-        translucent={true}
-        backgroundColor='transparent'
-      />
-      <ThemedView>
-        {/* 상태바 블러 오버레이 */}
-        <View style={[styles.statusBarBlur, { height: insets.top }]}>
-          <BlurView
-            intensity={10}
-            tint='default'
-            style={StyleSheet.absoluteFillObject}
-          />
-        </View>
-
-        <Animated.View
-          style={[
-            styles.listHeader,
-            blurViewAnimatedStyle,
-            { minHeight: insets.top, marginTop: insets.top },
-          ]}
-        >
-          <PostListHeader />
-        </Animated.View>
-
-        <Animated.FlatList
-          onScroll={scrollHandler}
-          data={mockDataList}
-          renderItem={renderPostItem}
-          keyExtractor={item => item.id.toString()}
-          showsVerticalScrollIndicator={false}
-          maxToRenderPerBatch={3}
-          initialNumToRender={3}
-          contentContainerStyle={[
-            styles.listContainer,
-            {
-              paddingTop: POST_LIST_HEADER_HEIGHT + insets.top,
-              paddingBottom: POST_LIST_HEADER_HEIGHT + insets.bottom,
-            },
-          ]}
+    <ThemedView>
+      {/* 상태바 블러 오버레이 */}
+      <View style={[styles.statusBarBlur, { height: insets.top }]}>
+        <BlurView
+          intensity={10}
+          tint='default'
+          style={StyleSheet.absoluteFillObject}
         />
-      </ThemedView>
-    </>
+      </View>
+
+      <Animated.View
+        style={[
+          styles.listHeader,
+          blurViewAnimatedStyle,
+          { minHeight: insets.top, marginTop: insets.top },
+        ]}
+      >
+        <PostListHeader />
+      </Animated.View>
+
+      <Animated.FlatList
+        onScroll={scrollHandler}
+        data={mockDataList}
+        renderItem={renderPostItem}
+        keyExtractor={item => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        maxToRenderPerBatch={3}
+        initialNumToRender={3}
+        contentContainerStyle={[
+          styles.listContainer,
+          {
+            paddingTop: POST_LIST_HEADER_HEIGHT + insets.top,
+            paddingBottom: POST_LIST_HEADER_HEIGHT + insets.bottom,
+          },
+        ]}
+      />
+    </ThemedView>
   )
 }
 
@@ -191,7 +160,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 1000,
+    zIndex: 3,
   },
   listHeader: {
     position: 'absolute',

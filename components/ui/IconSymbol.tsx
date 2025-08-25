@@ -26,6 +26,10 @@ const MAPPING = {
   'heart.fill': 'favorite',
   'message.fill': 'messenger',
   'square.and.arrow.up.fill': 'ios-share',
+  'arrow.left': 'chevron-left',
+  ellipsis: 'more-horiz',
+  'star.fill': 'star',
+  star: 'star-border',
 } as IconMapping
 
 export function IconSymbol({

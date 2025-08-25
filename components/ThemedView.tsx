@@ -23,7 +23,7 @@ export const ThemedView = ({
 
   if (safeArea) {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={[{ backgroundColor }, style]} {...otherProps} />
       </SafeAreaView>
     )

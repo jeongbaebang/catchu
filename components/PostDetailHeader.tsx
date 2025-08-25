@@ -1,35 +1,34 @@
-import { View, StyleSheet } from 'react-native'
 import React from 'react'
+import { View, StyleSheet } from 'react-native'
+import { useRouter } from 'expo-router'
 
 import IconButton from './ui/IconButton'
-import { ThemedText } from './ThemedText'
-import { mainColor } from '@/constants/colors'
 
-export const POST_LIST_HEADER_HEIGHT = 64
+const POST_DETAIL_HEADER_HEIGHT = 64
+const mainColor = '#F8F9FA'
 
-export const PostListHeader = () => {
+export const PostDetailHeader = ({ offset }: { offset: number }) => {
+  const router = useRouter()
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { top: offset }]}>
       <View style={styles.leftSection}>
         <IconButton
-          icon='bag.circle.fill'
+          icon='arrow.left'
           iconColor={mainColor}
-          size={32}
-          onPress={() => {}}
+          size={24}
+          onPress={() => router.back()}
         />
-        <ThemedText type='subtitle' style={styles.brandText}>
-          CATCH U
-        </ThemedText>
       </View>
       <View style={styles.rightSection}>
         <IconButton
-          icon='magnifyingglass'
+          icon='square.and.arrow.up.fill'
           iconColor={mainColor}
           size={24}
           onPress={() => {}}
         />
         <IconButton
-          icon='bell.fill'
+          icon='ellipsis'
           iconColor={mainColor}
           size={24}
           onPress={() => {}}
@@ -41,24 +40,22 @@ export const PostListHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: POST_LIST_HEADER_HEIGHT,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 3,
+    minHeight: POST_DETAIL_HEADER_HEIGHT,
     flexDirection: 'row',
     paddingHorizontal: 16,
     justifyContent: 'space-between',
   },
   leftSection: {
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
   },
   rightSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 16,
-  },
-  brandText: {
-    fontFamily: 'CormorantGaramondSemiBold',
   },
 })

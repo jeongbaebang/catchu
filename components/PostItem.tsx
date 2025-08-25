@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { ThemedText } from './ThemedText'
 import { mainColor } from '@/constants/colors'
 import { IconSymbol } from '@/components/ui/IconSymbol'
+import { ImageBox } from './ui/ImageBox'
 
 interface PostItemProps {
   // 사용자 정보
@@ -57,19 +58,8 @@ const PostItem: React.FC<PostItemProps> = ({
           <Text style={styles.priceText}>{price}</Text>
         </View>
       </View>
-
       {/* 아이템 콘텐츠 */}
-      <View style={styles.contentContainer}>
-        <Image source={productImage} style={styles.productImage} />
-        <Pressable style={styles.heartButton} onPress={onLike}>
-          <IconSymbol
-            name={isLiked ? 'heart.fill' : 'heart'}
-            size={20}
-            color={isLiked ? '#FF6B6B' : '#7F62E6'}
-          />
-        </Pressable>
-      </View>
-
+      <ImageBox productImage={productImage} isLiked={isLiked} onLike={onLike} />
       {/* 아이템 하단 */}
       <View style={styles.bottomSection}>
         <View style={styles.actionRow}>
@@ -113,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'space-between',
     borderTopWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: '#4A5568',
   },
   userInfo: {
     flexDirection: 'row',
@@ -145,25 +135,6 @@ const styles = StyleSheet.create({
   priceText: {
     color: '#FFFFFFE6',
     fontSize: 12,
-  },
-  contentContainer: {
-    position: 'relative',
-  },
-  productImage: {
-    width: '100%',
-    minHeight: 320,
-  },
-  heartButton: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: '#ffffffcc',
-    padding: 8,
-    borderRadius: 24,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 3,
   },
 
   bottomSection: {

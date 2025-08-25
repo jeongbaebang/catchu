@@ -4,15 +4,18 @@ import {
   ThemeProvider,
 } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-reanimated'
 
 import { useColorScheme } from '@/hooks/useColorScheme'
+import { useEffect } from 'react'
+
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     CormorantGaramondBold: require('../assets/fonts/CormorantGaramond-Bold.ttf'),
     CormorantGaramondBoldItalic: require('../assets/fonts/CormorantGaramond-BoldItalic.ttf'),
     CormorantGaramondItalic: require('../assets/fonts/CormorantGaramond-Italic.ttf'),
@@ -25,8 +28,13 @@ export default function RootLayout() {
     CormorantGaramondSemiBoldItalic: require('../assets/fonts/CormorantGaramond-SemiBoldItalic.ttf'),
   })
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync()
+    }
+  }, [loaded, error])
+
+  if (!loaded && !error) {
     return null
   }
 
