@@ -16,7 +16,7 @@ import {
   ThemedView,
 } from '@/components'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { mainColor, tintColorDark } from '@/constants/colors'
+import { tintColorDark } from '@/constants/colors'
 
 interface FormData {
   images: string[]
@@ -67,10 +67,15 @@ const CreatePostScreen = () => {
 
   return (
     <ThemedView
-      safeArea
       style={[
         styles.container,
-        { marginBottom: Platform.OS === 'ios' ? insets.top : -insets.bottom },
+        {
+          paddingTop: insets.top,
+          paddingBottom:
+            Platform.OS === 'ios'
+              ? insets.bottom + (insets.top + (insets.bottom > 0 ? 0 : 16))
+              : -insets.bottom,
+        },
       ]}
     >
       <PostCreateHeader />
