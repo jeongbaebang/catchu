@@ -18,75 +18,45 @@ import {
   ThemedView,
 } from '@/components'
 
-import { avatarImages, productImages } from '@/constants/mock'
+import { avatarImages } from '@/constants/mock'
+import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
+import { timeAgo } from '@/utils/timeAgo'
 
 const PostListScreen = () => {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const posts = usePosts()
+  const scrollY = useSharedValue(0)
 
-  // 0-10까지의 mock 데이터 생성
-  const mockDataList = Array.from({ length: 11 }, (_, index) => ({
-    id: index,
-    user: {
-      name: `StyleCraft${index}`,
-      avatar: avatarImages[index % avatarImages.length],
-      timeAgo: `${index + 1} hours ago`,
-    },
-    price: `${(Math.floor(Math.random() * 180 + 20) * 10000).toLocaleString()} 원`,
-    productImage: productImages[index % productImages.length],
-    description: [
-      '드디어 새 미니멀 컬렉션 나왔어요! 깔끔하면서도 실용적이라 진짜 좋음 ✨ 요즘 집에 완전 잘 어울려요',
-      '친환경 소재로 만든 럭셔리 아이템이에요. 지구도 살리고 편안함도 챙기고 🌱',
-      '다 수작업으로 만들어서 하나하나가 진짜 특별해요. 장인의 손길이 느껴진다고 할까요',
-      '요즘 라이프스타일에 딱 맞는 아이템들이에요. 예쁘면서도 쓸모 있어서 좋아요',
-      '한정판이라서 전세계에 100개밖에 없어요! 진짜 빨리 품절될 것 같음 🔥',
-      '클래식한데 세련되게 업데이트한 디자인이에요. 오래 써도 질리지 않을 스타일',
-      '소재 진짜 좋은 거로만 골라서 만들었어요. 전세계 최고급 업체에서 가져온 거라서',
-      '최신 디자인에 전통 기법까지 더해서 완전 완벽한 조합이에요',
-      '이번 주말에 독점 런칭해요! 놓치면 후회할걸요?',
-      '국제 디자인상 받은 작품이에요. 인정받은 디자인이라 믿고 보세요',
-      '시그니처 컬렉션 마지막 피스예요. 진짜 소장각 아이템',
-    ][index],
-    likes: 124 + index * 15,
-    comments: 18 + index * 3,
-    isLiked: index % 3 === 0,
-  }))
+  const handleLike = (id: string) => {}
 
-  const handleLike = (id: number) => {
-    console.log(`좋아요 클릭 - 아이템 ${id}`)
-  }
+  const handleComment = (id: string) => {}
 
-  const handleComment = (id: number) => {
-    console.log(`댓글 클릭 - 아이템 ${id}`)
-  }
+  const handleShare = (id: string) => {}
 
-  const handleShare = (id: number) => {
-    console.log(`공유 클릭 - 아이템 ${id}`)
-  }
-
-  const handleViewStore = (id: number) => {
-    console.log(`스토어 보기 클릭 - 아이템 ${id}`)
+  const handleViewStore = (id: string) => {
     router.push(`/post/${id}`)
   }
 
-  //  FIXME: any 타입 수정하기
-  const renderPostItem = ({ item }: { item: any }) => (
+  const renderPostItem = ({ item }: { item: PostWithAuthor }) => (
     <PostItem
-      user={item.user}
+      user={{
+        name: item.author?.name,
+        avatar: avatarImages[0],
+        timeAgo: timeAgo(item.createdAt),
+      }}
       price={item.price}
-      productImage={item.productImage}
+      productImage={item.images}
       description={item.description}
-      likes={item.likes}
-      comments={item.comments}
-      isLiked={item.isLiked}
-      onLike={() => handleLike(item.id)}
-      onComment={() => handleComment(item.id)}
-      onShare={() => handleShare(item.id)}
-      onViewStore={() => handleViewStore(item.id)}
+      likes={item.likes.length}
+      comments={item.comments.length}
+      isLiked={false}
+      onLike={() => handleLike(item.postId)}
+      onComment={() => handleComment(item.postId)}
+      onShare={() => handleShare(item.postId)}
+      onViewStore={() => handleViewStore(item.postId)}
     />
   )
-
-  const scrollY = useSharedValue(0)
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y
@@ -123,7 +93,6 @@ const PostListScreen = () => {
           style={StyleSheet.absoluteFillObject}
         />
       </View>
-
       <Animated.View
         style={[
           styles.listHeader,
@@ -133,12 +102,11 @@ const PostListScreen = () => {
       >
         <PostListHeader />
       </Animated.View>
-
       <Animated.FlatList
         onScroll={scrollHandler}
-        data={mockDataList}
+        data={posts}
         renderItem={renderPostItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.postId.toString()}
         showsVerticalScrollIndicator={false}
         maxToRenderPerBatch={3}
         initialNumToRender={3}

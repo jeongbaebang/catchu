@@ -16,7 +16,7 @@ interface PostItemProps {
   }
   // 제품 정보
   price: string
-  productImage: any
+  productImage: string
   description: string
   storeUrl?: string
   // 상호작용 데이터
@@ -55,7 +55,7 @@ const PostItem: React.FC<PostItemProps> = ({
           </View>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>{price}</Text>
+          <Text style={styles.priceText}>{price} 원</Text>
         </View>
       </View>
       {/* 아이템 콘텐츠 */}

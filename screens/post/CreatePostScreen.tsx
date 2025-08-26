@@ -9,7 +9,12 @@ import {
   Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+} from 'firebase/firestore'
 
 import {
   PhotoUpload,
@@ -18,8 +23,9 @@ import {
   ThemedView,
 } from '@/components'
 import { tintColorDark } from '@/constants/colors'
-import { uploadImage } from '@/utils/uploadImage'
 import { db } from '@/firebaseConfig'
+import { Post } from '@/models/post'
+import { postConverter } from '@/models/postConverter'
 
 interface FormData {
   images: string[]
@@ -58,17 +64,21 @@ const CreatePostScreen = () => {
 
     try {
       setSubmitStatus(true)
-      await addDoc(collection(db, 'posts'), {
-        images: await uploadImage('posts', formData.images[0]),
+
+      const ref = collection(db, 'posts').withConverter(postConverter)
+      const newPost: Omit<Post, 'postId'> = {
+        images: formData.images[0],
         title: formData.title,
         description: formData.description,
         price: formData.price,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: serverTimestamp() as Timestamp,
+        updatedAt: serverTimestamp() as Timestamp,
         authorId: 'empty',
         likes: [],
         comments: [],
-      })
+      }
+
+      await addDoc(ref, newPost)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
