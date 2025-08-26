@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigation } from 'expo-router'
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import {
   View,
   StyleSheet,
@@ -23,16 +23,42 @@ import {
 import { mainColor, tintColorDark } from '@/constants/colors'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 import ReviewInput from '@/components/ui/ReviewInput'
-import { avatarImages, productImages } from '@/constants/mock'
+import { avatarImages } from '@/constants/mock'
+import { usePostDetail } from '@/hooks/usePosts'
+import { calcAverageRating } from '@/utils/calcAverageRating'
 
 const PostDetailScreen = () => {
   const insets = useSafeAreaInsets()
-  const { width } = useWindowDimensions()
   const navigation = useNavigation()
+  const { width } = useWindowDimensions()
+  const { id } = useLocalSearchParams()
+  const post = usePostDetail(id)
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false })
   }, [navigation])
+
+  if (!post) {
+    return (
+      <ThemedView style={styles.mainContainer}>
+        <View style={[styles.statusBarBlur, { height: insets.top + 64 }]}>
+          <BlurView
+            intensity={10}
+            tint='default'
+            style={StyleSheet.absoluteFillObject}
+          />
+        </View>
+        <PostDetailHeader offset={insets.top} />
+        <View
+          style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
+        >
+          <ThemedText style={{ fontSize: 24, fontWeight: 'bold' }}>
+            Loading...
+          </ThemedText>
+        </View>
+      </ThemedView>
+    )
+  }
 
   return (
     <ThemedView style={styles.mainContainer}>
@@ -54,7 +80,7 @@ const PostDetailScreen = () => {
           {/* 상세 아이템 섹션 */}
           <ImageBox
             safeArea
-            productImage={productImages[0]}
+            productImage={post.images}
             isLiked
             onLike={() => {}}
             offset={64}
@@ -62,17 +88,19 @@ const PostDetailScreen = () => {
           />
           <View style={styles.container}>
             <View style={styles.priceSection}>
-              <ThemedText style={styles.priceText}>570,000 원</ThemedText>
-              <StarRating rating={4} count={3} showRating />
+              <ThemedText style={styles.priceText}>{post.price} 원</ThemedText>
+              <StarRating
+                rating={calcAverageRating(
+                  post.comments.map(comment => comment.rating),
+                )}
+                count={post.comments.length}
+                showRating
+              />
             </View>
             <View style={styles.productInfoSection}>
-              <ThemedText style={styles.productTitle}>
-                Premium Wireless Headphones with Noise Cancellation
-              </ThemedText>
+              <ThemedText style={styles.productTitle}>{post.title}</ThemedText>
               <ThemedText style={styles.productDescription}>
-                Experience crystal-clear audio with these premium wireless
-                headphones featuring advanced noise cancellation technology.
-                Perfect for music lovers and professionals alike.
+                {post.description}
               </ThemedText>
             </View>
           </View>
@@ -99,7 +127,9 @@ const PostDetailScreen = () => {
           {/* 리뷰 섹션 */}
           <View style={styles.reviewsSection}>
             <View style={styles.reviewsHeader}>
-              <ThemedText style={styles.reviewsTitle}>Reviews (156)</ThemedText>
+              <ThemedText style={styles.reviewsTitle}>
+                Reviews ({post.comments.length})
+              </ThemedText>
               <ThemedText style={styles.seeAllText}>See All</ThemedText>
             </View>
             {/* 리뷰 유저 #1 */}
@@ -112,46 +142,6 @@ const PostDetailScreen = () => {
                       Sarah Johnson
                     </ThemedText>
                     <StarRating rating={5} showRating={false} />
-                  </View>
-                  <ThemedText style={styles.reviewDate}>2 days ago</ThemedText>
-                </View>
-              </View>
-              <ThemedText style={styles.reviewText}>
-                Amazing sound quality! The noise cancellation works perfectly
-                and the battery life is exactly as advertised. Highly
-                recommended for anyone looking for premium headphones.
-              </ThemedText>
-            </View>
-            {/* 리뷰 유저 #2 */}
-            <View style={styles.reviewContainer}>
-              <View style={styles.reviewerInfo}>
-                <Image source={avatarImages[3]} style={styles.reviewerAvatar} />
-                <View style={styles.reviewerDetails}>
-                  <View style={styles.reviewerNameRow}>
-                    <ThemedText style={styles.reviewerName}>
-                      Sarah Johnson
-                    </ThemedText>
-                    <StarRating rating={2} showRating={false} />
-                  </View>
-                  <ThemedText style={styles.reviewDate}>2 days ago</ThemedText>
-                </View>
-              </View>
-              <ThemedText style={styles.reviewText}>
-                Amazing sound quality! The noise cancellation works perfectly
-                and the battery life is exactly as advertised. Highly
-                recommended for anyone looking for premium headphones.
-              </ThemedText>
-            </View>
-            {/* 리뷰 유저 #3 */}
-            <View style={styles.reviewContainer}>
-              <View style={styles.reviewerInfo}>
-                <Image source={avatarImages[4]} style={styles.reviewerAvatar} />
-                <View style={styles.reviewerDetails}>
-                  <View style={styles.reviewerNameRow}>
-                    <ThemedText style={styles.reviewerName}>
-                      Sarah Johnson
-                    </ThemedText>
-                    <StarRating rating={4} showRating={false} />
                   </View>
                   <ThemedText style={styles.reviewDate}>2 days ago</ThemedText>
                 </View>
