@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 
 import {
   PhotoUpload,
@@ -15,8 +17,9 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { tintColorDark } from '@/constants/colors'
+import { uploadImage } from '@/utils/uploadImage'
+import { db } from '@/firebaseConfig'
 
 interface FormData {
   images: string[]
@@ -33,7 +36,7 @@ const CreatePostScreen = () => {
     description: '',
     price: '',
   })
-
+  const [isSubmit, setSubmitStatus] = useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const handleImageSelected = (imageUri: string) => {
@@ -50,13 +53,28 @@ const CreatePostScreen = () => {
     }))
   }
 
-  const handleSubmit = () => {
-    console.log('Form Data:', {
-      images: formData.images,
-      title: formData.title,
-      description: formData.description,
-      price: formData.price,
-    })
+  const handleSubmit = async () => {
+    if (isSubmit) return
+
+    try {
+      setSubmitStatus(true)
+      await addDoc(collection(db, 'posts'), {
+        images: await uploadImage('posts', formData.images[0]),
+        title: formData.title,
+        description: formData.description,
+        price: formData.price,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        authorId: 'empty',
+        likes: [],
+        comments: [],
+      })
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    } finally {
+      setSubmitStatus(false)
+    }
   }
 
   const isFormValid =
@@ -200,7 +218,7 @@ const CreatePostScreen = () => {
               : styles.submitButtonDisabled,
           ]}
           onPress={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmit}
         >
           <ThemedText
             style={[
@@ -210,7 +228,7 @@ const CreatePostScreen = () => {
                 : styles.submitButtonTextDisabled,
             ]}
           >
-            Upload Product
+            {isSubmit ? '게시물 생성중...' : '게시물 생성'}
           </ThemedText>
         </Pressable>
       </View>
