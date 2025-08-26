@@ -11,12 +11,10 @@ import {
 import { Post } from '@/models/post'
 import { db } from '@/firebaseConfig'
 import { postConverter } from '@/models/postConverter'
+import { User } from '@/models/user'
 
-//  TODO: 타입 분리하기
 export type PostWithAuthor = Post & {
-  author: {
-    name: string
-  }
+  author: Pick<User, 'name' | 'avatarImage'>
 }
 
 export const usePosts = () => {
@@ -31,13 +29,32 @@ export const usePosts = () => {
           ...doc.data(),
         }))
 
-        // TODO: 각 post.authorId 기준으로 users에서 추가 데이터 가져오기
-        const postsWithAuthors = rawPosts.map(post => ({
-          ...post,
-          author: {
-            name: 'Lily',
-          },
-        }))
+        const postsWithAuthors = await Promise.all(
+          rawPosts.map(async post => {
+            const userDoc = await getDoc(doc(db, 'users', post.authorId))
+
+            if (userDoc.exists()) {
+              const userData = userDoc.data() as User
+
+              return {
+                ...post,
+                author: {
+                  name: userData.name,
+                  avatarImage: userData.avatarImage,
+                },
+              }
+            } else {
+              // 사용자 정보가 없을 경우 기본값
+              return {
+                ...post,
+                author: {
+                  name: '알 수 없는 사용자',
+                  avatarImage: '',
+                },
+              }
+            }
+          }),
+        )
 
         setPosts(postsWithAuthors)
       },
@@ -50,21 +67,53 @@ export const usePosts = () => {
 }
 
 export const usePostDetail = (id: string | string[] | null) => {
-  const [post, setPost] = useState<Post | null>(null)
+  const [post, setPost] = useState<PostWithAuthor | null>(null)
 
   useEffect(() => {
     if (!id) {
       setPost(null)
-
       return
     }
 
     const postId = Array.isArray(id) ? id[0] : id
     const docRef = doc(db, 'posts', postId).withConverter(postConverter)
 
-    const unsubscribe = onSnapshot(docRef, snapshot => {
+    const unsubscribe = onSnapshot(docRef, async snapshot => {
       if (snapshot.exists()) {
-        setPost(snapshot.data())
+        const rawPost = snapshot.data()
+
+        try {
+          const userDoc = await getDoc(doc(db, 'users', rawPost.authorId))
+
+          if (userDoc.exists()) {
+            const userData = userDoc.data()
+
+            setPost({
+              ...rawPost,
+              author: {
+                name: userData.name,
+                avatarImage: userData.avatarImage,
+              },
+            })
+          } else {
+            // 사용자 정보가 없을 경우 기본값
+            setPost({
+              ...rawPost,
+              author: {
+                name: '알 수 없는 사용자',
+                avatarImage: '',
+              },
+            })
+          }
+        } catch {
+          setPost({
+            ...rawPost,
+            author: {
+              name: '로드 실패',
+              avatarImage: '',
+            },
+          })
+        }
       } else {
         setPost(null)
       }

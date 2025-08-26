@@ -10,6 +10,7 @@ import 'react-native-reanimated'
 
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { useEffect } from 'react'
+import { SessionProvider } from '@/context/auth'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -39,12 +40,16 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='+not-found' />
-      </Stack>
-      <StatusBar style='auto' />
-    </ThemeProvider>
+    <SessionProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen name='sign-in' options={{ headerShown: false }} />
+          <Stack.Screen name='sign-up' options={{ headerShown: false }} />
+          <Stack.Screen name='+not-found' />
+        </Stack>
+        <StatusBar style='auto' />
+      </ThemeProvider>
+    </SessionProvider>
   )
 }

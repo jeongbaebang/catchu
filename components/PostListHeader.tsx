@@ -4,10 +4,13 @@ import React from 'react'
 import IconButton from './ui/IconButton'
 import { ThemedText } from './ThemedText'
 import { mainColor } from '@/constants/colors'
+import { useRouter } from 'expo-router'
 
 export const POST_LIST_HEADER_HEIGHT = 64
 
 export const PostListHeader = () => {
+  const router = useRouter()
+
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
@@ -15,7 +18,9 @@ export const PostListHeader = () => {
           icon='bag.circle.fill'
           iconColor={mainColor}
           size={32}
-          onPress={() => {}}
+          onPress={() => {
+            router.navigate('/sign-in')
+          }}
         />
         <ThemedText type='subtitle' style={styles.brandText}>
           CATCH U

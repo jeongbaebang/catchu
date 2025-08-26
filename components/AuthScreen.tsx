@@ -164,8 +164,6 @@ const styles = StyleSheet.create({
     minHeight: 56,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
     borderWidth: 1,
     borderColor: '#E5E7EB',
     width: '100%',
@@ -175,6 +173,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     fontWeight: '500',
+    height: '100%',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   primaryButton: {
     width: '100%',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { IconSymbol } from './IconSymbol'
@@ -62,7 +62,54 @@ export const StarRating: React.FC<StarRatingProps> = ({
   )
 }
 
+interface StarReviewButtonProps {
+  rating: number
+  onRatingChange: (rating: number) => void
+  size?: number
+  maxRating?: number
+  color?: string
+  emptyColor?: string
+}
+
+export const StarReviewButton: React.FC<StarReviewButtonProps> = ({
+  rating,
+  onRatingChange,
+  size = 30,
+  maxRating = 5,
+  color = '#EAB308',
+  emptyColor = '#E5E7EB',
+}) => {
+  return (
+    <View style={styles.container}>
+      {[...Array(maxRating)].map((_, index) => {
+        const starValue = index + 1
+        const isFilled = starValue <= rating
+
+        return (
+          <Pressable
+            key={index}
+            onPress={() => onRatingChange(starValue)}
+            style={[styles.star, { width: size + 4, height: size + 4 }]}
+          >
+            <IconSymbol
+              size={size}
+              name={isFilled ? 'star.fill' : 'star'}
+              color={isFilled ? color : emptyColor}
+            />
+          </Pressable>
+        )
+      })}
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  star: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 2,
+    padding: 2,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',

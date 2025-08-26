@@ -18,7 +18,6 @@ import {
   ThemedView,
 } from '@/components'
 
-import { avatarImages } from '@/constants/mock'
 import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
 import { timeAgo } from '@/utils/timeAgo'
 
@@ -41,8 +40,8 @@ const PostListScreen = () => {
   const renderPostItem = ({ item }: { item: PostWithAuthor }) => (
     <PostItem
       user={{
-        name: item.author?.name,
-        avatar: avatarImages[0],
+        name: item.author.name,
+        avatar: item.author.avatarImage,
         timeAgo: timeAgo(item.createdAt),
       }}
       price={item.price}

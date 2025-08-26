@@ -19,6 +19,7 @@ import {
 import {
   PhotoUpload,
   PostCreateHeader,
+  StarReviewButton,
   ThemedText,
   ThemedView,
 } from '@/components'
@@ -26,21 +27,25 @@ import { tintColorDark } from '@/constants/colors'
 import { db } from '@/firebaseConfig'
 import { Post } from '@/models/post'
 import { postConverter } from '@/models/postConverter'
+import { useSession } from '@/context/auth'
 
 interface FormData {
   images: string[]
   title: string
   description: string
   price: string
+  rating: number
 }
 
 const CreatePostScreen = () => {
+  const { userProfile } = useSession()
   const insets = useSafeAreaInsets()
   const [formData, setFormData] = useState<FormData>({
     images: [],
     title: '',
     description: '',
     price: '',
+    rating: 0,
   })
   const [isSubmit, setSubmitStatus] = useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
@@ -71,9 +76,10 @@ const CreatePostScreen = () => {
         title: formData.title,
         description: formData.description,
         price: formData.price,
+        rating: formData.rating,
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
-        authorId: 'empty',
+        authorId: userProfile?.userId || 'empty user',
         likes: [],
         comments: [],
       }
@@ -154,6 +160,15 @@ const CreatePostScreen = () => {
                   returnKeyType='next'
                 />
               </View>
+            </View>
+            <View style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>Rating</ThemedText>
+              <StarReviewButton
+                rating={formData.rating}
+                onRatingChange={rating =>
+                  setFormData(prev => ({ ...prev, rating }))
+                }
+              />
             </View>
             {/* Description Section */}
             <View style={styles.section}>

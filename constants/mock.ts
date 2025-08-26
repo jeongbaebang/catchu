@@ -25,3 +25,6 @@ export const productImages = [
   require('@/assets/images/product (9).png'),
   require('@/assets/images/product (10).png'),
 ]
+
+export const defaultUserImage =
+  'https://firebasestorage.googleapis.com/v0/b/react-native-catchu.firebasestorage.app/o/avatar%2Fuifaces-popular-avatar%20(0).jpg?alt=media&token=84335d9c-29e0-417d-8b74-528631bb2e54'

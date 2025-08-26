@@ -107,15 +107,15 @@ const PostDetailScreen = () => {
           {/* 판매자 정보 섹션 */}
           <View style={styles.sellerSection}>
             <View style={styles.sellerInfo}>
-              <Image source={avatarImages[0]} style={styles.avatar} />
+              <Image source={post.author.avatarImage} style={styles.avatar} />
               <View style={styles.sellerDetails}>
                 <ThemedText style={styles.sellerName}>
-                  TechStore Official
+                  {post.author.name}
                 </ThemedText>
                 <View style={styles.ratingRow}>
-                  <StarRating rating={5} showRating={false} />
+                  <StarRating rating={post.rating} showRating={false} />
                   <ThemedText style={styles.ratingText}>
-                    4.8 • 2.3k {width >= 428 ? 'reviews' : ''}
+                    {post.rating} • 2.3k {width >= 428 ? 'reviews' : ''}
                   </ThemedText>
                 </View>
               </View>
