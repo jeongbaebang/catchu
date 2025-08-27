@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
@@ -22,7 +23,6 @@ import {
   StarReviewButton,
   ThemedText,
   ThemedView,
-  WithAuth,
 } from '@/components'
 import { tintColorDark } from '@/constants/colors'
 import { db } from '@/firebaseConfig'
@@ -39,7 +39,7 @@ interface FormData {
 }
 
 const CreatePostScreen = () => {
-  const { userProfile } = useSession()
+  const { userProfile, user } = useSession()
   const insets = useSafeAreaInsets()
   const [formData, setFormData] = useState<FormData>({
     images: [],
@@ -66,6 +66,11 @@ const CreatePostScreen = () => {
   }
 
   const handleSubmit = async () => {
+    if (!user) {
+      Alert.alert('로그인 필요', '게시물을 생성하려면 로그인이 필요합니다.')
+
+      return
+    }
     if (isSubmit) return
 
     try {
@@ -353,6 +358,4 @@ const styles = StyleSheet.create({
   },
 })
 
-const AuthCreatePostScreen = WithAuth(CreatePostScreen)
-
-export { AuthCreatePostScreen as CreatePostScreen }
+export { CreatePostScreen }

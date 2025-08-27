@@ -38,7 +38,6 @@ const PostDetailScreen = () => {
   const { id } = useLocalSearchParams()
   const post = usePostDetail(id)
 
-  // 🔥 좋아요 훅 추가
   const { isLiked, likesCount, toggleLike } = useLikes(
     post?.postId || '',
     post?.likes || [],
@@ -99,8 +98,8 @@ const PostDetailScreen = () => {
           <ImageBox
             safeArea
             productImage={post.images}
-            isLiked={isLiked} // 🔥 실시간 좋아요 상태
-            onLike={handleLike} // 🔥 좋아요 핸들러
+            isLiked={isLiked}
+            onLike={handleLike}
             offset={64}
             height={390 + insets.top}
           />
