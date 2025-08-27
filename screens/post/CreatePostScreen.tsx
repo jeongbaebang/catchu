@@ -29,6 +29,7 @@ import { db } from '@/firebaseConfig'
 import { Post } from '@/models/post'
 import { postConverter } from '@/models/postConverter'
 import { useSession } from '@/context/auth'
+import { useRouter } from 'expo-router'
 
 interface FormData {
   images: string[]
@@ -39,6 +40,7 @@ interface FormData {
 }
 
 const CreatePostScreen = () => {
+  const router = useRouter()
   const { userProfile, user } = useSession()
   const insets = useSafeAreaInsets()
   const [formData, setFormData] = useState<FormData>({
@@ -91,6 +93,7 @@ const CreatePostScreen = () => {
       }
 
       await addDoc(ref, newPost)
+      router.navigate('/')
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)

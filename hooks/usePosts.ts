@@ -35,7 +35,9 @@ export const usePosts = () => {
             const userDoc = await getDoc(doc(db, 'users', post.authorId))
 
             if (userDoc.exists()) {
-              const userData = userDoc.data() as User
+              const userData = userDoc.data({
+                serverTimestamps: 'estimate',
+              }) as User
 
               return {
                 ...post,
@@ -57,7 +59,7 @@ export const usePosts = () => {
           }),
         )
 
-        await delay(1000)
+        await delay(1500)
         setPosts(postsWithAuthors)
       },
     )
