@@ -36,7 +36,6 @@ const PostDetailScreen = () => {
   const navigation = useNavigation()
   const { width } = useWindowDimensions()
   const { id } = useLocalSearchParams()
-  const { user } = useSession() // 🔥 현재 사용자 정보 추가
   const post = usePostDetail(id)
 
   // 🔥 좋아요 훅 추가
@@ -49,13 +48,7 @@ const PostDetailScreen = () => {
     navigation.setOptions({ headerShown: false })
   }, [navigation])
 
-  // 🔥 좋아요 핸들러 추가
   const handleLike = async () => {
-    if (!user) {
-      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
-      return
-    }
-
     try {
       await toggleLike()
     } catch (error: any) {
@@ -223,7 +216,7 @@ const CommentSubmissionForm = ({
   postId: string
 }) => {
   const { addComment } = useComments(postId)
-  const { userProfile } = useSession()
+  const { userProfile, user } = useSession()
   const [comment, setComment] = useState<{
     reviewText: string
     rating: number
@@ -234,6 +227,12 @@ const CommentSubmissionForm = ({
 
   // 전송 핸들러
   const handleSend = async () => {
+    if (!user) {
+      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
+
+      return
+    }
+
     if (comment.reviewText.trim().length > 0) {
       try {
         await addComment(comment.reviewText, comment.rating)
@@ -251,7 +250,9 @@ const CommentSubmissionForm = ({
 
   return (
     <View style={[styles.bottomInputSection, { marginBottom: offset }]}>
-      <Image source={userProfile?.avatarImage} style={styles.inputAvatar} />
+      {user ? (
+        <Image source={userProfile?.avatarImage} style={styles.inputAvatar} />
+      ) : null}
       <ReviewInput value={comment} onChange={setComment} />
       <Pressable style={styles.sendButton} onPress={handleSend}>
         <IconSymbol name='paperplane.fill' color={tintColorDark} />

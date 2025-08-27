@@ -22,6 +22,7 @@ import {
   StarReviewButton,
   ThemedText,
   ThemedView,
+  WithAuth,
 } from '@/components'
 import { tintColorDark } from '@/constants/colors'
 import { db } from '@/firebaseConfig'
@@ -352,4 +353,6 @@ const styles = StyleSheet.create({
   },
 })
 
-export { CreatePostScreen }
+const AuthCreatePostScreen = WithAuth(CreatePostScreen)
+
+export { AuthCreatePostScreen as CreatePostScreen }

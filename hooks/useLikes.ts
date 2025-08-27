@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from '@/context/auth'
 import { db } from '@/firebaseConfig'
 import { postConverter } from '@/models/postConverter'
+import { Alert } from 'react-native'
 
 interface UseLikesResult {
   isLiked: boolean
@@ -35,7 +36,9 @@ export const useLikes = (
 
   const toggleLike = async () => {
     if (!user) {
-      throw new Error('로그인이 필요합니다')
+      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
+
+      return
     }
 
     if (!postId || loading) return

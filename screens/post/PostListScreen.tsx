@@ -129,15 +129,9 @@ const PostItemWithLikes = ({
   onShare,
   onViewStore,
 }: PostItemWithLikesProps) => {
-  const { user } = useSession()
   const { isLiked, likesCount, toggleLike } = useLikes(post.postId, post.likes)
 
   const handleLike = async () => {
-    if (!user) {
-      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
-      return
-    }
-
     try {
       await toggleLike()
     } catch (error: any) {
