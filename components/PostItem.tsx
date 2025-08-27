@@ -9,16 +9,16 @@ import { ImageBox } from './ui/ImageBox'
 
 interface PostItemProps {
   // 사용자 정보
-  user: {
+  author: {
     name: string
     avatar: string
     timeAgo: string
   }
+  isLogin: boolean
   // 제품 정보
   price: string
   productImage: string
   description: string
-  storeUrl?: string
   // 상호작용 데이터
   likes: number
   comments: number
@@ -31,7 +31,8 @@ interface PostItemProps {
 }
 
 const PostItem: React.FC<PostItemProps> = ({
-  user,
+  author,
+  isLogin,
   price,
   productImage,
   description,
@@ -48,10 +49,10 @@ const PostItem: React.FC<PostItemProps> = ({
       {/* 아이템 헤더 */}
       <View style={styles.itemHeader}>
         <View style={styles.userInfo}>
-          <Image source={user.avatar} style={styles.avatar} />
+          <Image source={author.avatar} style={styles.avatar} />
           <View>
-            <ThemedText style={styles.userName}>{user.name}</ThemedText>
-            <ThemedText style={styles.timeAgo}>{user.timeAgo}</ThemedText>
+            <ThemedText style={styles.userName}>{author.name}</ThemedText>
+            <ThemedText style={styles.timeAgo}>{author.timeAgo}</ThemedText>
           </View>
         </View>
         <View style={styles.priceContainer}>
@@ -59,7 +60,12 @@ const PostItem: React.FC<PostItemProps> = ({
         </View>
       </View>
       {/* 아이템 콘텐츠 */}
-      <ImageBox productImage={productImage} isLiked={isLiked} onLike={onLike} />
+      <ImageBox
+        productImage={productImage}
+        isLiked={isLiked}
+        onLike={onLike}
+        showAnimate={isLogin}
+      />
       {/* 아이템 하단 */}
       <View style={styles.bottomSection}>
         <View style={styles.actionRow}>

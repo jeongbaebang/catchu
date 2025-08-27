@@ -17,12 +17,14 @@ interface ImageBoxProps {
   onLike?: () => void
   height?: number
   safeArea?: boolean
+  showAnimate?: boolean
   offset?: number
 }
 
 export const ImageBox: React.FC<ImageBoxProps> = ({
   productImage,
   onLike,
+  showAnimate,
   isLiked,
   height = 320,
   safeArea,
@@ -43,7 +45,7 @@ export const ImageBox: React.FC<ImageBoxProps> = ({
   const handleLike = () => {
     onLike?.()
 
-    if (!isLiked) {
+    if (showAnimate && !isLiked) {
       scale.value = 0
       opacity.value = 1
 

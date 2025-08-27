@@ -22,12 +22,14 @@ import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
 import { useLikes } from '@/hooks/useLikes'
 import { timeAgo } from '@/utils/timeAgo'
 import { PostItemSkeleton } from '@/components/SkeletonItem'
+import { useSession } from '@/context/auth'
 
 const PostListScreen = () => {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const posts = usePosts()
   const scrollY = useSharedValue(0)
+  const { user } = useSession()
 
   const handleComment = (id: string) => {
     router.push(`/post/${id}`)
@@ -44,6 +46,7 @@ const PostListScreen = () => {
     return (
       <PostItemWithLikes
         post={item}
+        isLogin={!!user}
         onComment={() => handleComment(item.postId)}
         onShare={() => handleShare(item.postId)}
         onViewStore={() => handleViewStore(item.postId)}
@@ -130,6 +133,7 @@ const PostListScreen = () => {
 }
 
 interface PostItemWithLikesProps {
+  isLogin: boolean
   post: PostWithAuthor
   onComment: () => void
   onShare: () => void
@@ -137,6 +141,7 @@ interface PostItemWithLikesProps {
 }
 
 const PostItemWithLikes = ({
+  isLogin,
   post,
   onComment,
   onShare,
@@ -154,7 +159,8 @@ const PostItemWithLikes = ({
 
   return (
     <PostItem
-      user={{
+      isLogin={isLogin}
+      author={{
         name: post.author.name,
         avatar: post.author.avatarImage,
         timeAgo: timeAgo(post.createdAt),
