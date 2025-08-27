@@ -20,7 +20,6 @@ import {
 
 import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
 import { useLikes } from '@/hooks/useLikes'
-import { useSession } from '@/context/auth'
 import { timeAgo } from '@/utils/timeAgo'
 
 const PostListScreen = () => {
@@ -30,12 +29,11 @@ const PostListScreen = () => {
   const scrollY = useSharedValue(0)
 
   const handleComment = (id: string) => {
-    router.push(`/post/${id}`) // 댓글은 상세 페이지에서
+    router.push(`/post/${id}`)
   }
 
-  const handleShare = (id: string) => {
-    // 공유 기능 구현
-  }
+  // 공유 기능 구현
+  const handleShare = (id: string) => {}
 
   const handleViewStore = (id: string) => {
     router.push(`/post/${id}`)
