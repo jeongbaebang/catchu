@@ -7,13 +7,7 @@ import {
   updateProfile,
   User as FirebaseUser,
 } from 'firebase/auth'
-import {
-  doc,
-  setDoc,
-  getDoc,
-  serverTimestamp,
-  Timestamp,
-} from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore'
 
 import { User } from '@/models/user'
 import { auth, db } from '@/firebaseConfig'
@@ -21,7 +15,6 @@ import { defaultUserImage } from '@/constants/mock'
 
 interface AuthContextType {
   user: FirebaseUser | null
-  userProfile: User | null
   isLoading: boolean
   signUp: (email: string, password: string, name: string) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
@@ -40,38 +33,16 @@ export function useSession() {
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null)
-  const [userProfile, setUserProfile] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
       setUser(firebaseUser)
-
-      if (firebaseUser) {
-        // Firestore에서 사용자 프로필 로드
-        await loadUserProfile(firebaseUser.uid)
-      } else {
-        setUserProfile(null)
-      }
-
       setIsLoading(false)
     })
 
     return unsubscribe
   }, [])
-
-  const loadUserProfile = async (userId: string) => {
-    try {
-      const userDoc = await getDoc(doc(db, 'users', userId))
-
-      if (userDoc.exists()) {
-        setUserProfile(userDoc.data() as User)
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('프로필 로드 실패:', error)
-    }
-  }
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
@@ -112,7 +83,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const logOut = async () => {
     try {
       await signOut(auth)
-      setUserProfile(null)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('로그아웃 실패:', error)
@@ -123,7 +93,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
-        userProfile,
+
         isLoading,
         signUp,
         signIn,

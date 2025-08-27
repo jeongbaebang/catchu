@@ -217,7 +217,7 @@ const CommentSubmissionForm = ({
   postId: string
 }) => {
   const { addComment } = useComments(postId)
-  const { userProfile, user } = useSession()
+  const { user } = useSession()
   const [comment, setComment] = useState<{
     reviewText: string
     rating: number
@@ -252,7 +252,7 @@ const CommentSubmissionForm = ({
   return (
     <View style={[styles.bottomInputSection, { marginBottom: offset }]}>
       {user ? (
-        <Image source={userProfile?.avatarImage} style={styles.inputAvatar} />
+        <Image source={user.photoURL} style={styles.inputAvatar} />
       ) : null}
       <ReviewInput value={comment} onChange={setComment} />
       <Pressable style={styles.sendButton} onPress={handleSend}>

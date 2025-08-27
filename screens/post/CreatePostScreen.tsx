@@ -41,7 +41,7 @@ interface FormData {
 
 const CreatePostScreen = () => {
   const router = useRouter()
-  const { userProfile, user } = useSession()
+  const { user } = useSession()
   const insets = useSafeAreaInsets()
   const [formData, setFormData] = useState<FormData>({
     images: [],
@@ -87,7 +87,7 @@ const CreatePostScreen = () => {
         rating: formData.rating,
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
-        authorId: userProfile?.userId || 'empty user',
+        authorId: user.uid || 'Empty user',
         likes: [],
         comments: [],
       }

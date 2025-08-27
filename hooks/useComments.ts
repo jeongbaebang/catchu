@@ -13,11 +13,11 @@ import { Comment } from '@/models/post'
 import { postConverter } from '@/models/postConverter'
 
 export const useComments = (postId: string) => {
-  const { userProfile, user } = useSession()
+  const { user } = useSession()
   const [loading, setLoading] = useState(false)
 
   const addComment = async (content: string, rating: number) => {
-    if (!user || !userProfile) {
+    if (!user) {
       throw new Error('로그인이 필요합니다')
     }
 
@@ -32,8 +32,8 @@ export const useComments = (postId: string) => {
         postId,
         author: {
           userId: user.uid,
-          avatarImage: userProfile.avatarImage,
-          name: userProfile.name,
+          avatarImage: user.photoURL || '',
+          name: user.displayName || 'Empty user',
         },
         content,
         rating,
