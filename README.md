@@ -38,7 +38,7 @@
 
 ### 데모 영상
 
-[![데모 영상](https://img.youtube.com/vi/tEhZDWNi5qc/maxresdefault.jpg)](https://youtu.be/tEhZDWNi5qc)
+[![데모 영상](https://img.youtube.com/vi/tEhZDWNi5qc/sddefault.jpg)](https://youtu.be/tEhZDWNi5qc)
 
 *클릭하시면 전체 기능 시연을 볼 수 있습니다*
 
