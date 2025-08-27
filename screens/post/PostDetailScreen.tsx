@@ -37,6 +37,7 @@ const PostDetailScreen = () => {
   const { width } = useWindowDimensions()
   const { id } = useLocalSearchParams()
   const post = usePostDetail(id)
+  const { user } = useSession()
 
   const { isLiked, likesCount, toggleLike } = useLikes(
     post?.postId || '',
@@ -97,6 +98,7 @@ const PostDetailScreen = () => {
           {/* 상세 아이템 섹션 */}
           <ImageBox
             safeArea
+            showAnimate={!!user}
             productImage={post.images}
             isLiked={isLiked}
             onLike={handleLike}
