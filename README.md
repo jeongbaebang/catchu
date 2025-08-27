@@ -1,50 +1,94 @@
-# Welcome to your Expo app 👋
+# 프론트엔드 기술 과제
+> React Native와 Firebase로 구현한 상품 리뷰 커뮤니티 앱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<div>
+  <img align="right" width="40%" src="./assets/images/thumbnail.png">
+</div>
 
-## Get started
+### 📱 프로젝트 소개
 
-1. Install dependencies
+상품에 대한 리뷰와 평점을 공유할 수 있는 모바일 커뮤니티 앱입니다.
+사용자들이 직접 상품을 등록하고, 리뷰를 작성하며, 다른 사용자들과 소통할 수 있는 플랫폼을 제공합니다.
 
-   ```bash
-   npm install
-   ```
+### ✨ 주요 기능
 
-2. Start the app
+### 🔐 사용자 관리
+- [x] 회원가입 및 로그인
+- [x] 사용자 프로필 관리
+- [x] 로그아웃 기능
 
-   ```bash
-   npx expo start
-   ```
+### 📝 게시물 관리
+- [x] 게시물 목록 조회
+- [x] 게시물 상세 보기
+- [x] 새 게시물 작성
+- [x] 이미지 첨부 기능
+- [x] 가격 정보 입력
 
-In the output, you'll find options to open the app in a
+### ⭐ 리뷰 시스템
+- [x] 5점 만점 별점 시스템
+- [x] 댓글 작성 및 조회
+- [x] 좋아요 기능 (인증 사용자만)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 📱 사용자 경험
+- [x] 스켈레톤 UI
+- [x] 직관적인 하단 탭 네비게이션
+- [x] 매끄러운 페이지 전환
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+### 데모 영상
 
-When you're ready, run:
+[![데모 영상](https://img.youtube.com/vi/tEhZDWNi5qc/maxresdefault.jpg)](https://youtu.be/tEhZDWNi5qc)
+
+*클릭하시면 전체 기능 시연을 볼 수 있습니다*
+
+## 🛠 기술 스택
+
+### Frontend
+- **React Native**: 크로스플랫폼 모바일 앱 개발
+- **Expo**: React Native 개발 플랫폼
+- **TypeScript**: 타입 안전성을 위한 정적 타입 언어
+
+### Backend & Database
+- **Firebase Authentication**: 사용자 인증 및 관리
+- **Firebase Firestore**: NoSQL 데이터베이스
+- **Firebase Storage**: 이미지 파일 저장
+
+### 개발 도구
+- **Expo CLI**: 개발 및 빌드 도구
+- **TypeScript**: 코드 품질 향상
+
+## 🚀 설치 및 실행
+
+### 필수 조건
+- Node.js 16.0 이상
+- npm 또는 yarn
+- Expo CLI
+- Android Studio 또는 Xcode (실제 기기 테스트용)
+
+### 설치 방법
 
 ```bash
-npm run reset-project
+# 저장소 복제
+git clone https://github.com/jeongbaebang/catchu.git
+
+# 디렉토리 이동
+cd catchu
+
+# 의존성 설치
+npm install
+
+# Expo 개발 서버 실행
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 환경 변수
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id_here
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id_here
+EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id_here
+```
