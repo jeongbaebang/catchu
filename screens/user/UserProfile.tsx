@@ -1,4 +1,4 @@
-import { Button, View, StyleSheet } from 'react-native'
+import { Button, StyleSheet } from 'react-native'
 import React from 'react'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
@@ -15,9 +15,6 @@ export const UserProfile = () => {
     return (
       <ThemedView style={styles.container}>
         <ThemedText style={styles.title}>비로그인 상태</ThemedText>
-        <View style={styles.avatarPlaceholder} />
-        <ThemedText style={styles.name}></ThemedText>
-        <ThemedText style={styles.email}></ThemedText>
         <Button title='로그인' onPress={() => router.push('/sign-in')} />
       </ThemedView>
     )
@@ -47,13 +44,6 @@ const styles = StyleSheet.create({
     lineHeight: 36,
   },
   avatar: {
-    width: 250,
-    height: 250,
-    borderRadius: 250,
-    borderWidth: 2,
-    borderColor: mainColor,
-  },
-  avatarPlaceholder: {
     width: 250,
     height: 250,
     borderRadius: 250,

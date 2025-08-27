@@ -227,7 +227,7 @@ const CommentSubmissionForm = ({
   // 전송 핸들러
   const handleSend = async () => {
     if (!user) {
-      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
+      Alert.alert('로그인 필요', '코멘트를 작성하려면 로그인이 필요합니다.')
 
       return
     }
