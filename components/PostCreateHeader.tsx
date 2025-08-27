@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router'
 import IconButton from './ui/IconButton'
 
 const POST_DETAIL_HEADER_HEIGHT = 64
-const mainColor = '#F8F9FA'
+const iconColor = '#F8F9FA'
 
 export const PostCreateHeader = () => {
   const router = useRouter()
@@ -15,7 +15,7 @@ export const PostCreateHeader = () => {
       <View style={styles.leftSection}>
         <IconButton
           icon='arrow.left'
-          iconColor={mainColor}
+          iconColor={iconColor}
           size={24}
           onPress={() => router.back()}
         />
@@ -23,7 +23,7 @@ export const PostCreateHeader = () => {
       <View style={styles.rightSection}>
         <IconButton
           icon='ellipsis'
-          iconColor={mainColor}
+          iconColor={iconColor}
           size={24}
           onPress={() => {}}
         />

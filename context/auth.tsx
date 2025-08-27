@@ -23,7 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function useSession() {
+export const useSession = () => {
   const context = useContext(AuthContext)
   if (!context) {
     throw new Error('useSession must be used within SessionProvider')
@@ -31,7 +31,11 @@ export function useSession() {
   return context
 }
 
-export function SessionProvider({ children }: { children: React.ReactNode }) {
+export const SessionProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
   const [user, setUser] = useState<FirebaseUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -105,7 +109,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-function getErrorMessage(errorCode: string): string {
+const getErrorMessage = (errorCode: string): string => {
   switch (errorCode) {
     case 'auth/email-already-in-use':
       return '이미 사용 중인 이메일입니다.'

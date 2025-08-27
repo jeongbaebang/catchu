@@ -36,9 +36,8 @@ const PostDetailScreen = () => {
   const navigation = useNavigation()
   const { width } = useWindowDimensions()
   const { id } = useLocalSearchParams()
-  const post = usePostDetail(id)
   const { user } = useSession()
-
+  const post = usePostDetail(id)
   const { isLiked, likesCount, toggleLike } = useLikes(
     post?.postId || '',
     post?.likes || [],
@@ -123,7 +122,6 @@ const PostDetailScreen = () => {
               </ThemedText>
             </View>
           </View>
-
           <Pressable style={styles.interactionSection} onPress={toggleLike}>
             <View style={styles.likesInfo}>
               <ThemedText style={styles.likesText}>
@@ -133,7 +131,6 @@ const PostDetailScreen = () => {
               </ThemedText>
             </View>
           </Pressable>
-
           {/* 판매자 정보 섹션 */}
           <View style={styles.sellerSection}>
             <View style={styles.sellerInfo}>
@@ -154,7 +151,6 @@ const PostDetailScreen = () => {
               <ThemedText>Follow</ThemedText>
             </Pressable>
           </View>
-
           {/* 리뷰 섹션 */}
           <View style={styles.reviewsSection}>
             <View style={styles.reviewsHeader}>
@@ -197,7 +193,6 @@ const PostDetailScreen = () => {
             })}
           </View>
         </ScrollView>
-
         {/* 상호작용 섹션 (리뷰 작성) */}
         <CommentSubmissionForm
           offset={insets.bottom / 2}
@@ -208,7 +203,7 @@ const PostDetailScreen = () => {
   )
 }
 
-// 메시지 전송 컴포넌트
+// 리뷰 전송 컴포넌트
 const CommentSubmissionForm = ({
   offset,
   postId,
@@ -217,6 +212,7 @@ const CommentSubmissionForm = ({
   postId: string
 }) => {
   const { addComment } = useComments(postId)
+
   const { user } = useSession()
   const [comment, setComment] = useState<{
     reviewText: string
@@ -226,7 +222,6 @@ const CommentSubmissionForm = ({
     rating: 0,
   })
 
-  // 전송 핸들러
   const handleSend = async () => {
     if (!user) {
       Alert.alert('로그인 필요', '코멘트를 작성하려면 로그인이 필요합니다.')
@@ -234,11 +229,10 @@ const CommentSubmissionForm = ({
       return
     }
 
+    // 리뷰가 있는 경우만 허용
     if (comment.reviewText.trim().length > 0) {
       try {
         await addComment(comment.reviewText, comment.rating)
-
-        // 전송 후 상태 초기화
         setComment({
           reviewText: '',
           rating: 0,

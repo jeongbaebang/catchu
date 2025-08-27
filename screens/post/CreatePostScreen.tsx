@@ -41,8 +41,8 @@ interface FormData {
 
 const CreatePostScreen = () => {
   const router = useRouter()
-  const { user } = useSession()
   const insets = useSafeAreaInsets()
+  const { user } = useSession()
   const [formData, setFormData] = useState<FormData>({
     images: [],
     title: '',
@@ -77,7 +77,6 @@ const CreatePostScreen = () => {
 
     try {
       setSubmitStatus(true)
-
       const ref = collection(db, 'posts').withConverter(postConverter)
       const newPost: Omit<Post, 'postId'> = {
         images: formData.images[0],
@@ -91,7 +90,6 @@ const CreatePostScreen = () => {
         likes: [],
         comments: [],
       }
-
       await addDoc(ref, newPost)
       router.navigate('/')
     } catch (error) {
@@ -207,7 +205,6 @@ const CreatePostScreen = () => {
                 />
               </View>
             </View>
-
             {/* Price Section */}
             <View style={styles.section}>
               <ThemedText style={styles.sectionTitle}>Price</ThemedText>

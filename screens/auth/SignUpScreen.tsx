@@ -9,7 +9,6 @@ const SignUpScreen = () => {
   const router = useRouter()
   const navigation = useNavigation()
   const { signUp } = useSession()
-
   const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')

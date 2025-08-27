@@ -1,6 +1,6 @@
-// hooks/useUser.ts
 import { useState, useEffect } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
+
 import { User } from '@/models/user'
 import { db } from '@/firebaseConfig'
 

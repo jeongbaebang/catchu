@@ -36,6 +36,9 @@ interface AuthScreenProps {
   secondaryLinkAction: () => void
 }
 
+/**
+ * 로그인/회원가입 재사용 가능한 컴포넌트
+ */
 export const AuthScreen: React.FC<AuthScreenProps> = ({
   title,
   subtitle,

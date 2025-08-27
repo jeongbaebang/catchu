@@ -27,15 +27,15 @@ import { useSession } from '@/context/auth'
 const PostListScreen = () => {
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const posts = usePosts()
   const scrollY = useSharedValue(0)
+  const posts = usePosts()
   const { user } = useSession()
 
   const handleComment = (id: string) => {
     router.push(`/post/${id}`)
   }
 
-  // 공유 기능 구현
+  // TODO: 공유 기능 구현
   const handleShare = (id: string) => {}
 
   const handleViewStore = (id: string) => {

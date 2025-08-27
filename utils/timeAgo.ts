@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
 
-export function timeAgo(createdAt: Timestamp | null): string {
+export const timeAgo = (createdAt: Timestamp | null): string => {
   if (!createdAt) return 'just now'
 
   const now = new Date()

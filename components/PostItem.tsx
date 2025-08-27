@@ -8,7 +8,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol'
 import { ImageBox } from './ui/ImageBox'
 
 interface PostItemProps {
-  // 사용자 정보
+  // 게시자 정보
   author: {
     name: string
     avatar: string

@@ -25,15 +25,21 @@ const SkeletonItem = () => {
   const shimmerValue = useSharedValue(0)
 
   React.useEffect(() => {
+    // 컴포넌트가 마운트될 때 shimmer 애니메이션 시작
+    // withRepeat: 애니메이션을 무한 반복 (-1)하고 reverse(true)로 왕복
+    // withTiming: 1.5초 동안 0에서 1까지 부드럽게 변화
     shimmerValue.value = withRepeat(withTiming(1, { duration: 1500 }), -1, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // shimmer 효과를 위한 애니메이션 스타일 정의
   const shimmerStyle = useAnimatedStyle(() => {
+    // opacity를 0.3~0.7 사이에서 변화시켜 깜빡이는 효과 생성
+    // shimmerValue가 0일 때: 0.3 (어두움)
+    // shimmerValue가 1일 때: 0.7 (밝음)
     const opacity = 0.3 + shimmerValue.value * 0.4
     return { opacity }
   })
-
   return (
     <View style={styles.container}>
       {/* 헤더 섹션 스켈레톤 */}
@@ -47,10 +53,8 @@ const SkeletonItem = () => {
         </View>
         <Animated.View style={[styles.priceSkeleton, shimmerStyle]} />
       </View>
-
       {/* 이미지 섹션 스켈레톤 */}
       <Animated.View style={[styles.imageSkeleton, shimmerStyle]} />
-
       {/* 하단 섹션 스켈레톤 */}
       <View style={styles.bottomSection}>
         {/* 액션 버튼들 스켈레톤 */}
@@ -66,14 +70,12 @@ const SkeletonItem = () => {
             </View>
           ))}
         </View>
-
         {/* 설명 텍스트 스켈레톤 */}
         <View style={styles.descriptionContainer}>
           <Animated.View style={[styles.descriptionLine1, shimmerStyle]} />
           <Animated.View style={[styles.descriptionLine2, shimmerStyle]} />
           <Animated.View style={[styles.descriptionLine3, shimmerStyle]} />
         </View>
-
         {/* View in Store 버튼 스켈레톤 */}
         <Animated.View style={[styles.viewStoreSkeleton, shimmerStyle]} />
       </View>
@@ -85,8 +87,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
   },
-
-  // 헤더 스타일
   itemHeader: {
     flexDirection: 'row',
     minHeight: 64,
@@ -128,15 +128,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#374151',
     borderRadius: 10,
   },
-
-  // 이미지 스켈레톤
   imageSkeleton: {
     width: '100%',
     height: 300,
     backgroundColor: '#374151',
   },
-
-  // 하단 섹션
   bottomSection: {
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -163,8 +159,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#374151',
     borderRadius: 7,
   },
-
-  // 설명 텍스트 스켈레톤
   descriptionContainer: {
     gap: 4,
   },
@@ -186,8 +180,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#374151',
     borderRadius: 8,
   },
-
-  // View Store 버튼 스켈레톤
   viewStoreSkeleton: {
     width: 90,
     height: 18,

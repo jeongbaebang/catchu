@@ -25,6 +25,7 @@ export const usePosts = () => {
     const ref = collection(db, 'posts').withConverter(postConverter)
     const unsubscribe = onSnapshot(
       query(ref, orderBy('createdAt', 'desc')),
+
       async snapshot => {
         const rawPosts = snapshot.docs.map(doc => ({
           ...doc.data(),
@@ -59,6 +60,7 @@ export const usePosts = () => {
           }),
         )
 
+        // UX 지연 효과 처리 1.5초
         await delay(1500)
         setPosts(postsWithAuthors)
       },
