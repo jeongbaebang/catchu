@@ -1,10 +1,10 @@
 import { View, StyleSheet } from 'react-native'
 import React from 'react'
+import { useRouter } from 'expo-router'
 
 import IconButton from './ui/IconButton'
 import { ThemedText } from './ThemedText'
 import { mainColor } from '@/constants/colors'
-import { useRouter } from 'expo-router'
 
 export const POST_LIST_HEADER_HEIGHT = 64
 

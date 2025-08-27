@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated'
-import { StyleSheet, View, Alert } from 'react-native'
+import { StyleSheet, View, Alert, ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
@@ -21,6 +21,7 @@ import {
 import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
 import { useLikes } from '@/hooks/useLikes'
 import { timeAgo } from '@/utils/timeAgo'
+import { PostItemSkeleton } from '@/components/SkeletonItem'
 
 const PostListScreen = () => {
   const insets = useSafeAreaInsets()
@@ -94,22 +95,36 @@ const PostListScreen = () => {
       >
         <PostListHeader />
       </Animated.View>
-      <Animated.FlatList
-        onScroll={scrollHandler}
-        data={posts}
-        renderItem={renderPostItem}
-        keyExtractor={item => item.postId.toString()}
-        showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={3}
-        initialNumToRender={3}
-        contentContainerStyle={[
-          styles.listContainer,
-          {
-            paddingTop: POST_LIST_HEADER_HEIGHT + insets.top,
-            paddingBottom: POST_LIST_HEADER_HEIGHT + insets.bottom,
-          },
-        ]}
-      />
+      {posts ? (
+        <Animated.FlatList
+          onScroll={scrollHandler}
+          data={posts}
+          renderItem={renderPostItem}
+          keyExtractor={item => item.postId.toString()}
+          showsVerticalScrollIndicator={false}
+          maxToRenderPerBatch={3}
+          initialNumToRender={3}
+          contentContainerStyle={[
+            styles.listContainer,
+            {
+              paddingTop: POST_LIST_HEADER_HEIGHT + insets.top,
+              paddingBottom: POST_LIST_HEADER_HEIGHT + insets.bottom,
+            },
+          ]}
+        />
+      ) : (
+        <ScrollView
+          contentContainerStyle={[
+            styles.listContainer,
+            {
+              paddingTop: POST_LIST_HEADER_HEIGHT + insets.top,
+              paddingBottom: POST_LIST_HEADER_HEIGHT + insets.bottom,
+            },
+          ]}
+        >
+          <PostItemSkeleton count={5} />
+        </ScrollView>
+      )}
     </ThemedView>
   )
 }

@@ -12,13 +12,14 @@ import { Post } from '@/models/post'
 import { db } from '@/firebaseConfig'
 import { postConverter } from '@/models/postConverter'
 import { User } from '@/models/user'
+import { delay } from '@/utils/delay'
 
 export type PostWithAuthor = Post & {
   author: Pick<User, 'name' | 'avatarImage'>
 }
 
 export const usePosts = () => {
-  const [posts, setPosts] = useState<PostWithAuthor[]>([])
+  const [posts, setPosts] = useState<PostWithAuthor[]>()
 
   useEffect(() => {
     const ref = collection(db, 'posts').withConverter(postConverter)
@@ -56,6 +57,7 @@ export const usePosts = () => {
           }),
         )
 
+        await delay(1000)
         setPosts(postsWithAuthors)
       },
     )
