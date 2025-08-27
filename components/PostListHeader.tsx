@@ -37,7 +37,9 @@ export const PostListHeader = () => {
           icon='bell.fill'
           iconColor={mainColor}
           size={24}
-          onPress={() => {}}
+          onPress={() => {
+            router.push('/profile')
+          }}
         />
       </View>
     </View>
