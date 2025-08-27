@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Alert } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
@@ -19,6 +19,8 @@ import {
 } from '@/components'
 
 import { PostWithAuthor, usePosts } from '@/hooks/usePosts'
+import { useLikes } from '@/hooks/useLikes'
+import { useSession } from '@/context/auth'
 import { timeAgo } from '@/utils/timeAgo'
 
 const PostListScreen = () => {
@@ -27,35 +29,28 @@ const PostListScreen = () => {
   const posts = usePosts()
   const scrollY = useSharedValue(0)
 
-  const handleLike = (id: string) => {}
+  const handleComment = (id: string) => {
+    router.push(`/post/${id}`) // 댓글은 상세 페이지에서
+  }
 
-  const handleComment = (id: string) => {}
-
-  const handleShare = (id: string) => {}
+  const handleShare = (id: string) => {
+    // 공유 기능 구현
+  }
 
   const handleViewStore = (id: string) => {
     router.push(`/post/${id}`)
   }
 
-  const renderPostItem = ({ item }: { item: PostWithAuthor }) => (
-    <PostItem
-      user={{
-        name: item.author.name,
-        avatar: item.author.avatarImage,
-        timeAgo: timeAgo(item.createdAt),
-      }}
-      price={item.price}
-      productImage={item.images}
-      description={item.description}
-      likes={item.likes.length}
-      comments={item.comments.length}
-      isLiked={false}
-      onLike={() => handleLike(item.postId)}
-      onComment={() => handleComment(item.postId)}
-      onShare={() => handleShare(item.postId)}
-      onViewStore={() => handleViewStore(item.postId)}
-    />
-  )
+  const renderPostItem = ({ item }: { item: PostWithAuthor }) => {
+    return (
+      <PostItemWithLikes
+        post={item}
+        onComment={() => handleComment(item.postId)}
+        onShare={() => handleShare(item.postId)}
+        onViewStore={() => handleViewStore(item.postId)}
+      />
+    )
+  }
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y
@@ -118,6 +113,56 @@ const PostListScreen = () => {
         ]}
       />
     </ThemedView>
+  )
+}
+
+interface PostItemWithLikesProps {
+  post: PostWithAuthor
+  onComment: () => void
+  onShare: () => void
+  onViewStore: () => void
+}
+
+const PostItemWithLikes = ({
+  post,
+  onComment,
+  onShare,
+  onViewStore,
+}: PostItemWithLikesProps) => {
+  const { user } = useSession()
+  const { isLiked, likesCount, toggleLike } = useLikes(post.postId, post.likes)
+
+  const handleLike = async () => {
+    if (!user) {
+      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
+      return
+    }
+
+    try {
+      await toggleLike()
+    } catch (error: any) {
+      Alert.alert('오류', error.message)
+    }
+  }
+
+  return (
+    <PostItem
+      user={{
+        name: post.author.name,
+        avatar: post.author.avatarImage,
+        timeAgo: timeAgo(post.createdAt),
+      }}
+      price={post.price}
+      productImage={post.images}
+      description={post.description}
+      likes={likesCount}
+      comments={post.comments.length}
+      isLiked={isLiked}
+      onLike={handleLike}
+      onComment={onComment}
+      onShare={onShare}
+      onViewStore={onViewStore}
+    />
   )
 }
 

@@ -93,7 +93,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         name: firebaseUser.displayName || '',
         avatarImage: firebaseUser.photoURL || '',
         createdAt: serverTimestamp() as Timestamp,
-        likes: [],
       }
 
       await setDoc(doc(db, 'users', firebaseUser.uid), userProfile)

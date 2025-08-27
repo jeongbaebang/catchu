@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import {
   View,
@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native'
 import { Image } from 'expo-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -23,20 +24,44 @@ import {
 import { mainColor, tintColorDark } from '@/constants/colors'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 import ReviewInput from '@/components/ui/ReviewInput'
-import { avatarImages } from '@/constants/mock'
 import { usePostDetail } from '@/hooks/usePosts'
 import { calcAverageRating } from '@/utils/calcAverageRating'
+import { useSession } from '@/context/auth'
+import { useComments } from '../../hooks/useComments'
+import { timeAgo } from '@/utils/timeAgo'
+import { useLikes } from '@/hooks/useLikes'
 
 const PostDetailScreen = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const { width } = useWindowDimensions()
   const { id } = useLocalSearchParams()
+  const { user } = useSession() // 🔥 현재 사용자 정보 추가
   const post = usePostDetail(id)
+
+  // 🔥 좋아요 훅 추가
+  const { isLiked, likesCount, toggleLike } = useLikes(
+    post?.postId || '',
+    post?.likes || [],
+  )
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false })
   }, [navigation])
+
+  // 🔥 좋아요 핸들러 추가
+  const handleLike = async () => {
+    if (!user) {
+      Alert.alert('로그인 필요', '좋아요를 누르려면 로그인이 필요합니다.')
+      return
+    }
+
+    try {
+      await toggleLike()
+    } catch (error: any) {
+      Alert.alert('오류', error.message)
+    }
+  }
 
   if (!post) {
     return (
@@ -81,8 +106,8 @@ const PostDetailScreen = () => {
           <ImageBox
             safeArea
             productImage={post.images}
-            isLiked
-            onLike={() => {}}
+            isLiked={isLiked} // 🔥 실시간 좋아요 상태
+            onLike={handleLike} // 🔥 좋아요 핸들러
             offset={64}
             height={390 + insets.top}
           />
@@ -104,6 +129,17 @@ const PostDetailScreen = () => {
               </ThemedText>
             </View>
           </View>
+
+          <Pressable style={styles.interactionSection} onPress={toggleLike}>
+            <View style={styles.likesInfo}>
+              <ThemedText style={styles.likesText}>
+                {likesCount > 0
+                  ? `${likesCount}명이 좋아합니다`
+                  : '첫 좋아요를 눌러보세요!'}
+              </ThemedText>
+            </View>
+          </Pressable>
+
           {/* 판매자 정보 섹션 */}
           <View style={styles.sellerSection}>
             <View style={styles.sellerInfo}>
@@ -124,6 +160,7 @@ const PostDetailScreen = () => {
               <ThemedText>Follow</ThemedText>
             </Pressable>
           </View>
+
           {/* 리뷰 섹션 */}
           <View style={styles.reviewsSection}>
             <View style={styles.reviewsHeader}>
@@ -132,47 +169,111 @@ const PostDetailScreen = () => {
               </ThemedText>
               <ThemedText style={styles.seeAllText}>See All</ThemedText>
             </View>
-            {/* 리뷰 유저 #1 */}
-            <View style={styles.reviewContainer}>
-              <View style={styles.reviewerInfo}>
-                <Image source={avatarImages[2]} style={styles.reviewerAvatar} />
-                <View style={styles.reviewerDetails}>
-                  <View style={styles.reviewerNameRow}>
-                    <ThemedText style={styles.reviewerName}>
-                      Sarah Johnson
-                    </ThemedText>
-                    <StarRating rating={5} showRating={false} />
+            {post.comments.map((comment, index) => {
+              return (
+                <View
+                  style={styles.reviewContainer}
+                  key={`${comment.author.userId}_${index}`}
+                >
+                  <View style={styles.reviewerInfo}>
+                    <Image
+                      source={comment.author.avatarImage}
+                      style={styles.reviewerAvatar}
+                    />
+                    <View style={styles.reviewerDetails}>
+                      <View style={styles.reviewerNameRow}>
+                        <ThemedText style={styles.reviewerName}>
+                          {comment.author.name}
+                        </ThemedText>
+                        <StarRating
+                          rating={comment.rating}
+                          showRating={false}
+                        />
+                      </View>
+                      <ThemedText style={styles.reviewDate}>
+                        {timeAgo(comment.createdAt)}
+                      </ThemedText>
+                    </View>
                   </View>
-                  <ThemedText style={styles.reviewDate}>2 days ago</ThemedText>
+                  <ThemedText style={styles.reviewText}>
+                    {comment.content}
+                  </ThemedText>
                 </View>
-              </View>
-              <ThemedText style={styles.reviewText}>
-                Amazing sound quality! The noise cancellation works perfectly
-                and the battery life is exactly as advertised. Highly
-                recommended for anyone looking for premium headphones.
-              </ThemedText>
-            </View>
+              )
+            })}
           </View>
         </ScrollView>
+
         {/* 상호작용 섹션 (리뷰 작성) */}
-        <View
-          style={[
-            styles.bottomInputSection,
-            { marginBottom: insets.bottom / 2 },
-          ]}
-        >
-          <Image source={avatarImages[0]} style={styles.inputAvatar} />
-          <ReviewInput />
-          <Pressable style={styles.sendButton}>
-            <IconSymbol name='paperplane.fill' color={tintColorDark} />
-          </Pressable>
-        </View>
+        <CommentSubmissionForm
+          offset={insets.bottom / 2}
+          postId={post.postId}
+        />
       </KeyboardAvoidingView>
     </ThemedView>
   )
 }
 
+// 메시지 전송 컴포넌트
+const CommentSubmissionForm = ({
+  offset,
+  postId,
+}: {
+  offset: number
+  postId: string
+}) => {
+  const { addComment } = useComments(postId)
+  const { userProfile } = useSession()
+  const [comment, setComment] = useState<{
+    reviewText: string
+    rating: number
+  }>({
+    reviewText: '',
+    rating: 0,
+  })
+
+  // 전송 핸들러
+  const handleSend = async () => {
+    if (comment.reviewText.trim().length > 0) {
+      try {
+        await addComment(comment.reviewText, comment.rating)
+
+        // 전송 후 상태 초기화
+        setComment({
+          reviewText: '',
+          rating: 0,
+        })
+      } catch (error: any) {
+        Alert.alert('오류', error.message)
+      }
+    }
+  }
+
+  return (
+    <View style={[styles.bottomInputSection, { marginBottom: offset }]}>
+      <Image source={userProfile?.avatarImage} style={styles.inputAvatar} />
+      <ReviewInput value={comment} onChange={setComment} />
+      <Pressable style={styles.sendButton} onPress={handleSend}>
+        <IconSymbol name='paperplane.fill' color={tintColorDark} />
+      </Pressable>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  interactionSection: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  likesInfo: {
+    minHeight: 20,
+    alignItems: 'flex-end',
+  },
+  likesText: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    fontWeight: '500',
+  },
   mainContainer: {
     flex: 1,
     position: 'relative',

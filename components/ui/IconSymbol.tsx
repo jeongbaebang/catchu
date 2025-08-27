@@ -32,6 +32,7 @@ const MAPPING = {
   star: 'star-border',
   'plus.circle': 'add-circle-outline',
   pencil: 'edit',
+  xmark: 'close',
 } as IconMapping
 
 export function IconSymbol({

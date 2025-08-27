@@ -8,5 +8,4 @@ export interface User {
   email: string
   avatarImage: string
   createdAt: Timestamp
-  likes: { postId: string }[]
 }
